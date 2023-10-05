@@ -2,16 +2,19 @@ extern crate lru;
 
 use lru::LruCache;
 use crate::game::Game;
+use crate::card::Card;
+use std::sync::Arc;
 
 pub struct EvaluationEngine {
-    game_cache: LruCache<u32, Game>
+    game_cache: LruCache<u32, Game>,
+    reference_deck: Arc<Card>
 }
 
 impl EvaluationEngine {
     pub fn apply_move(&mut self, game_id: u32, move_str: &str) -> Result<(), String> {
-        let gameOption = self.game_cache.get(&game_id);
+        let game_option = self.game_cache.get(&game_id);
 
-        match gameOption {
+        match game_option {
             Some(game) => {
                 
                 Ok(println!("{:?}", game))

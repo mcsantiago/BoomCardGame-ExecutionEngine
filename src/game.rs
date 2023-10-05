@@ -1,5 +1,6 @@
-use crate::card::{Card, CardEffect, CardNumber, Suit};
-use crate::player::Player;
+use crate::card::{Card, CardEffect, CardNumber, Suit, MonsterCardProperties};
+use crate::board::{Board, PlayerCards};
+use std::rc::Rc;
 
 #[derive(Clone, Debug)]
 pub enum ActivePlayer {
@@ -8,39 +9,62 @@ pub enum ActivePlayer {
 }
 
 #[derive(Clone, Debug)]
+pub enum Phase {
+    DRAW,
+    STANDY,
+    MAIN_1,
+    BATTLE(BattlePhase),
+    MAIN_2,
+    END
+}
+
+#[derive(Clone, Debug)]
+pub enum BattlePhase {
+    START,
+    BATTLE,
+    DAMAGE,
+    END
+}
+
+#[derive(Debug)]
+pub struct Player {
+    player_id: u32,
+    player_name: Rc<str>,
+    player_cards: PlayerCards,
+}
+
+#[derive(Debug)]
 pub struct Game {
     player1: Player,
     player2: Player,
-    active_player: ActivePlayer
+    active_player: ActivePlayer,
+    board: Board,
+    phase: Phase
 }
 
-impl Game {
-    fn generate_default_deck(shuffle: bool) -> Vec<Card> {
-        vec![
-            Card::create(Suit::HEART('D'), CardNumber::TWO('d'), 1200, CardEffect::DrawOneWhenDestroyed),
-        ]
-    }
 
+impl Game {
     pub fn new() -> Self {
         let player1 = Player {
-            deck: Game::generate_default_deck(true),
-            hand: vec![],
-            graveyard: vec![],
-            monsters: vec![],
-            lifepoints: 8000
+            player_id: 1,
+            player_name: Rc::from("Player 1"),
+            player_cards: PlayerCards::new(),
         };
 
         let player2 = Player {
-            deck: Game::generate_default_deck(true),
-            hand: vec![],
-            graveyard: vec![],
-            monsters: vec![],
-            lifepoints: 8000
+            player_id: 2,
+            player_name: Rc::from("Player 2"),
+            player_cards: PlayerCards::new(),
         };
+
+        let board = Board::new();
+
         Self {
             player1,
             player2,
-            active_player: ActivePlayer::Player1
+            board,
+            active_player: ActivePlayer::Player1,
+            phase: Phase::DRAW
         }
     }
 

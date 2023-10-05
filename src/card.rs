@@ -5,66 +5,64 @@ pub enum CardEffect {
     DestroyAttackingMonster,
     PiercingDamage,
     PreemptiveSpecialSummonAttack, // Can summon during opponent's attack phase
-    MonsterReborn,
+    ResurrectMonster,
     None
 }
 
 #[derive(Clone, Debug)]
 pub enum Suit {
-    CLUB(char),
-    SPADE(char),
-    HEART(char),
-    DIAMOND(char)
+    CLUB,
+    SPADE,
+    HEART,
+    DIAMOND
 }
 
 #[derive(Clone, Debug)]
 pub enum CardNumber {
-    TWO(char),
-    THREE(char),
-    FOUR(char),
-    FIVE(char),
-    SIX(char),
-    SEVEN(char),
-    EIGHT(char),
-    NINE(char),
-    TEN(char),
-    JACK(char),
-    QUEEN(char),
-    KING(char),
-    ACE(char),
-    JOKER(char)
+    TWO(Suit, MonsterCardProperties),
+    THREE(Suit, MonsterCardProperties),
+    FOUR(Suit, MonsterCardProperties),
+    FIVE(Suit, MonsterCardProperties),
+    SIX(Suit, MonsterCardProperties),
+    SEVEN(Suit, MonsterCardProperties),
+    EIGHT(Suit, MonsterCardProperties),
+    NINE(Suit, MonsterCardProperties),
+    TEN(Suit, MonsterCardProperties),
+    JACK(Suit, MonsterCardProperties),
+    QUEEN(Suit, MonsterCardProperties),
+    KING(Suit, MonsterCardProperties),
+    ACE(Suit, MonsterCardProperties),
+    JOKER
+}
+
+#[derive(Debug)]
+pub struct Card {
+    pub number: CardNumber,
 }
 
 #[derive(Clone, Debug)]
-pub struct Card {
-    suit: Suit,
-    number: CardNumber,
-    power: i32,
-    effect: CardEffect
+pub struct MonsterCardProperties {
+    pub power: i32,
+    pub effect: CardEffect
 }
 
+
 impl Card {
-    fn new(suit: Suit, number: CardNumber, power: i32, effect: CardEffect) -> Self {
+    fn new(number: CardNumber) -> Self {
         Self{ 
-            suit,
             number,
-            power,
-            effect
         }
     }
 
-    pub fn create(suit: Suit, number: CardNumber, power: i32, effect: CardEffect) -> Self {
+    pub fn create(number: CardNumber) -> Self {
         Self::new( 
-            suit,
             number,
-            power,
-            effect
         )
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct CardInHand {
-    pub card: Card,
-    pub is_playable: bool
+    card: Card,
+    is_playable: bool
 }
